@@ -21,5 +21,6 @@ from word_predictor.views import home, word_pred
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
+    path('home/', home, name='home'),
     path('word_prediction/', word_pred, name='word_pred'),
 ]

@@ -17,6 +17,7 @@
 
         <!-- Web fonts -->
         <link href="https://fonts.googleapis.com/css?family=Cabin:400,700|Playfair+Display:900" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
         <!-- favicon.ico. Place these in the root directory. -->
         <link rel="shortcut icon" href="favicon.ico">
@@ -42,9 +43,9 @@
                         <div class="grid-column span-half align--right">
                             <!-- Mobile social links -->
                             <ul class="mobile-social-links list--inline">
-                                <li class="mr1"><a class="link link--default" href="https://www.twitter.com"><img class="icon" src="./static/img/facebook.svg" alt="Facebook"></a></li>
-                                <li class="mr1"><a class="link link--default" href="https://www.instagram.com"><img class="icon" src="./static/img/instagram.svg" alt="Instagram"></a></li>
-                                <li><a class="link link--default" href="https://www.facebook.com"><img class="icon" src="./static/img/twitter.svg" alt="Twitter"></a></li>
+                                <li class="mr1"><a class="link link--default" href="https://www.twitter.com"><img class="icon" src="{% static 'img/facebook.svg' %}" alt="Facebook"></a></li>
+                                <li class="mr1"><a class="link link--default" href="https://www.instagram.com"><img class="icon" src="{% static 'img/instagram.svg' %}" alt="Instagram"></a></li>
+                                <li><a class="link link--default" href="https://www.facebook.com"><img class="icon" src="{% static 'img/twitter.svg' %}" alt="Twitter"></a></li>
                             </ul>
                         </div>
                     </div>
@@ -53,34 +54,64 @@
 
             <!-- Desktop header -->
             <!-- Desktop logo -->
-            <h1 class="hide-on-mobile logo-container absolute block full-width align--center"><img class="logo--desktop" src="./static/img/desktop-logo.svg" alt="WordWise" title="WordWise"></h1>
+            <h1 class="hide-on-mobile logo-container absolute block full-width align--center"><img class="logo--desktop" src="{% static 'img/desktop-logo.png' %}" alt="WordWise" title="WordWise"></h1>
             <!-- Social links -->
             <ul class="pt1 no-bullets align--center hide-on-mobile">
-                <li><a class="link link--default" href="https://www.twitter.com"><img class="icon" src="./static/img/facebook.svg" alt="Facebook"></a></li>
-                <li><a class="link link--default" href="https://www.instagram.com"><img class="icon" src="./static/img/instagram.svg" alt="Instagram"></a></li>
-                <li><a class="link link--default" href="https://www.facebook.com"><img class="icon" src="./static/img/twitter.svg" alt="Twitter"></a></li>
+                <li><a class="link link--default" href="https://www.twitter.com"><img class="icon" src="{% static 'img/facebook.svg' %}" alt="Facebook"></a></li>
+                <li><a class="link link--default" href="https://www.instagram.com"><img class="icon" src="{% static 'img/instagram.svg' %}" alt="Instagram"></a></li>
+                <li><a class="link link--default" href="https://www.facebook.com"><img class="icon" src="{% static 'img/twitter.svg' %}" alt="Twitter"></a></li>
             </ul>
 
         </header>
         
         <!-- Hero image -->
         <div class="hero-container full-width show-on-mobile pt1 pl2 pr2">
-            <div class="hero full-width full-height" style="background:rgba(0,0,0,0) url(./static/img/2.jpg) no-repeat scroll center center/cover"></div>
+            <div class="hero full-width full-height" style="background:rgba(0,0,0,0) url(/static/img/2.jpg) no-repeat scroll center center/cover"></div>
         </div>
-        <div class="hide-on-mobile hero" style="background:rgba(0,0,0,0) url(./static/img/2.jpg) no-repeat scroll center center/cover"></div>
+        <div class="hide-on-mobile hero" style="background:rgba(0,0,0,0) url(/static/img/2.jpg) no-repeat scroll center center/cover"></div>
 
         <!-- Body -->
         <div class="body full-width pt1 pr2 pb2 pl2">
             <!-- Navigation -->
             <nav class="navigation border--bottom pt1">
                 <ul class="no-bullets list--inline pb1 bold">
-                    <li class="small mr2"><a class="link link--text" href="./index.html">Who We Are</a></li>
-                    <li class="small mr2"><a class="link link--text current" href="./destinations.html">Destinations</a></li>
-                    <li class="small mr2"><a class="link link--text" href="./pricing.html">Pricing</a></li>
-                    <li class="small"><a class="link link--text" href="./contact.html">Contact</a></li>
+                    <li class="small mr2"><a class="link link--text" href="/home">Who We Are</a></li>
+                    <li class="small mr2"><a class="link link--text current" href="/word_prediction">Word Predictor</a></li>
+                    <li class="small mr2"><a class="link link--text" href="">Pricing</a></li>
+                    <li class="small"><a class="link link--text" href="">Contact</a></li>
                 </ul>
             </nav>
-            <!-- Page Content -->
+
+            <main class="content pt-2 pb-2">
+                <h1 class="animate__animated animate__fadeInDown">Next Word Predictor</h1>
+                <form action="/word_prediction/" method="post">
+                  {% csrf_token %}
+                  <div class="form-group animate__animated animate__fadeIn">
+                    <input type="text" name="input_text" class="form-control" placeholder="Enter your text" />
+                  </div>
+                  <button type="submit" class="btn btn-primary animate__animated animate__fadeInUp">Predict</button>
+                </form>
+                {% if predicted_word %}
+                  <div class="prediction-result animate__animated animate__fadeIn">
+                    <h4>Predicted Word:</h4>
+                    <p class="predicted-word">{{ predicted_word }}</p>
+                  </div>
+                {% endif %}
+              </main>
+              
+              
+
+            <!-- <main class="content pt2 pb2">
+                <form action="/word_prediction/" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="input_text" placeholder="Enter text" />
+                    <button type="submit">Predict</button>
+                </form>
+                {% if predicted_word %}
+                    <h1>Predicted Word: {{ predicted_word }}</h1>
+                {% endif %}
+            </main> -->
+            <!-- Page Content
             <main class="content pt2 pb2">
                 <h2>Destinations</h2>
                 <div class="border--full rounded pt1 pb1 pr2 pl2 mb1">
@@ -123,7 +154,7 @@
                         </div>
                     </div>
                 </div>
-            </main>
+            </main> -->
                         <!-- Footer -->
             <footer class="border--top pt1 pb1">
                 <p class="text--gray small mb0">&copy; Copyright WordWise | Design by <a href="https://www.eatapapaya.com" class="link link--text">Papaya</a>.</p>
