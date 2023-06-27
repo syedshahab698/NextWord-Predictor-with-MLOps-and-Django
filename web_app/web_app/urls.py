@@ -16,11 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from word_predictor.views import home, word_pred
+from word_predictor.views import home, word_pred, word_test
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('home/', home, name='home'),
     path('word_prediction/', word_pred, name='word_pred'),
+    path('word_test_tool/', word_test, name='word_test'),
 ]

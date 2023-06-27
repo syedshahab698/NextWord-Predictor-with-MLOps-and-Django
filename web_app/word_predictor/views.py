@@ -10,15 +10,15 @@ def word_pred(request):
     if request.method == 'POST':
         input_text = request.POST.get('input_text', '')
         predicted_word = predict_next_word(input_text)
-        InputText.objects.create(text=input_text)
+        # InputText.objects.create(text=input_text)
     else:
         predicted_word = ''
 
     return render(request, 'word_prediction_tool.html', {'predicted_word': predicted_word})
 
 
-# def word_pred(request):
-#     return render(request, 'word_prediction_tool.html')
+def word_test(request):
+    return render(request, 'word_test_tool.html')
 
 # def word_pred(request):
 #     return render(request, 'word_prediction_tool.html')
