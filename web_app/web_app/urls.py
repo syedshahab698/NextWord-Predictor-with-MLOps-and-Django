@@ -16,8 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from word_predictor.views import home, word_pred, word_test
-
+from word_predictor.views import home
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
