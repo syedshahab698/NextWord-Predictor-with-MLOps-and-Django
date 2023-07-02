@@ -22,6 +22,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('home/', home, name='home'),
-    path('word_prediction/', word_pred, name='word_pred'),
-    path('word_test_tool/', word_test, name='word_test'),
 ]
