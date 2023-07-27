@@ -5,6 +5,8 @@
 <html lang="en">
 
 <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <meta charset="UTF-8">
     <title>Next Word Predictor</title>
     <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
@@ -182,9 +184,9 @@
     <div class="container">
         <input id="input1" value="sss"> </input>
     </div>
-
     <div class="app">
         <form id="myForm">
+        {% csrf_token %}
             <div class="input-container">
                 <input type="text" name="text" id="text" placeholder="Type Here" autocomplete="off">
                 <span class="suggestion-container" id="suggestion-container"></span>
@@ -202,6 +204,10 @@
                 </div>
             </div>
         </form>
+    </div>
+
+    <div >
+        <label class="label" id="words"> </label>
     </div>
 
 
@@ -222,7 +228,6 @@
 
     <script>
 
-        // Code By Webdevtrick ( https://webdevtrick.com )
         console.clear();
 
         const inputContainerEl = document.querySelector(".input-container");
@@ -374,6 +379,13 @@
         console.log('upder', input1.value)
         });
 
+        const input3 = document.querySelector('#words');
+
+        input3.addEventListener('input', function() {
+        console.log('input3', input3.value)
+        });
+
+
         document.getElementById("myForm").addEventListener("submit", function (event) {
             event.preventDefault(); // Prevents the form from submitting and refreshing the page
 
@@ -384,30 +396,37 @@
             var newValue = document.querySelector("#input1").value;
             var label = document.getElementById("updater");
             label.innerHTML += " "+ newValue;
-            // Make the API call to predict the text
-            fetch("http://127.0.0.1:5000/echo", {
-                method: "POST",
-                body: JSON.stringify({ predictions: [label.innerHTML, 'pred 2', 'pred 3'] }),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // Handle the response from the API
-                    wordsArray = data['predictions']
-                    console.log("Predicted text:", wordsArray);
-
-                })
-                .catch(error => {
-                    console.error("Error:", error);
+         
+            $.ajax({
+                    url: "http://127.0.0.1:8000/echo",
+                    type: "POST",
+                    data: JSON.stringify({ text: label.innerHTML }),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        // Set the CSRF token in the request header
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                    },
+                    success: function (data) {
+                       // Handle the response from the API
+                        console.log(data['predictions']);
+                        var wordsArray = [];
+                        for (var i = 0; i < data['predictions'].length; i++) {
+                            wordsArray.push(data['predictions'][i]['word']);
+                        }
+                        console.log("Predicted text:", wordsArray);
+                        var label = document.getElementById("words");
+                        // label.innerHTML = '\n \n Top 5 Predictions: ' + wordsArray.join(', ');
+                        label.innerHTML = data['predictions']
+  
+                    },
+                    error: function (error) {
+                        console.error("Error:", error);
+                    },
                 });
 
-            // Clear the input field
-            document.getElementById("updater").value = "updated";
+                document.getElementById("updater").value = "updated";
         });
     </script>
-
 </body>
 
 </html>

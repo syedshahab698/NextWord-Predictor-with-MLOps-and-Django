@@ -17,8 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from word_predictor.views import home
+from word_predictor.predict import predict_next_word
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('home/', home, name='home'),
+    path('echo', predict_next_word)
+
 ]
