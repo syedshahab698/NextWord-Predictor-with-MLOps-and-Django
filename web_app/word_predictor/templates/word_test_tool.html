@@ -32,11 +32,21 @@
             width: 100%;
             height: 100vh;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             background: #e1e9e9;
+            display: flex;
+      flex-direction: column;
+
+      margin: 0;
         }
+
+        main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
 
         input {
             outline: none;
@@ -48,8 +58,8 @@
         }
 
         .app {
-            width: 400px;
-            height: 400px;
+            width: 20rem;
+            height: 15rem;
             display: flex;
             place-items: center;
         }
@@ -174,43 +184,103 @@
             width: 200px;
             /* Adjust width as desired */
         }
+
+
+        /* CSS */
+table {
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Optional: Additional styling for odd and even rows */
+tr:nth-child(odd) {
+  background-color: #e6e6e6;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+
+footer {
+      background-color: #333;
+      color: #fff;
+      padding-bottom: 3rem !important;
+      text-align: end;
+    }
+
+    footer p {
+      margin: 0;
+    }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <label class="label" id="updater">Hello, How are you? </label>
-    </div>
-    <div class="container">
-        <input id="input1" value="sss"> </input>
-    </div>
-    <div class="app">
-        <form id="myForm">
-        {% csrf_token %}
-            <div class="input-container">
-                <input type="text" name="text" id="text" placeholder="Type Here" autocomplete="off">
-                <span class="suggestion-container" id="suggestion-container"></span>
-                <div class="icons-container">
-                    <div class="icon tab-key hidden">
-                        <svg>
-                            <use xlink:href="#tab-key"></use>
-                        </svg>
-                    </div>
-                    <div class="icon enter-key hidden">
-                        <svg>
-                            <use xlink:href="#enter-key"></use>
-                        </svg>
-                    </div>
-                </div>
+    <main>
+        <div style="display: flex; justify-content: center; padding: 4rem;">
+            <h1 class="label"  style="font-size: 30px;" >Next Word Predictor</h1>
+        </div>
+       
+        <div style="display: flex; justify-content: center;">
+            <div class="container">
+                <label class="label">Start Writing here: </label>
+                <label class="label" id="updater"> </label>
             </div>
-        </form>
-    </div>
+            <div class="container">
+                <input id="input1" value="sss"> </input>
+            </div>
+            <div class="app">
+                <form id="myForm">
+                {% csrf_token %}
+                    <div class="input-container">
+                        <input type="text" name="text" id="text" placeholder="Type Here" autocomplete="off">
+                        <span class="suggestion-container" id="suggestion-container"></span>
+                        <div class="icons-container">
+                            <div class="icon tab-key hidden">
+                                <svg>
+                                    <use xlink:href="#tab-key"></use>
+                                </svg>
+                            </div>
+                            <div class="icon enter-key hidden">
+                                <svg>
+                                    <use xlink:href="#enter-key"></use>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    
+        <div style="display: flex;justify-content: center;">
+            <label class="label"  style="font-size: 15px;" id="words"> </label>
+        </div>
 
-    <div >
-        <label class="label" id="words"> </label>
-    </div>
+    </main>
+    
 
-
+    <footer class="label" style="font-size: 14px; color: slategray;">
+        <p>Developed by:</p>
+        <p>Shahbuddin Syed</p>
+        <p>Gurnish Kaur</p>
+        <p>Venkata Rachakonda</p>
+        <p>Submitted to: Marcos Bittencourt</p>
+      </footer>
     <svg class="icons">
         <symbol id="tab-key" viewBox="0 0 448 448">
             <polygon points="225.813,126.187 302.293,202.667 0,202.667 0,245.333 302.293,245.333 225.813,321.813 256,352 384,224 256,96 
@@ -396,7 +466,20 @@
             var newValue = document.querySelector("#input1").value;
             var label = document.getElementById("updater");
             label.innerHTML += " "+ newValue;
-         
+            function generateTableHTML(data) {
+                data.sort((a, b) => b.score - a.score);
+                let tableHTML = '<table>';
+                tableHTML += '<tr><th>Word</th><th>Score</th></tr>';
+
+                for (let i = 0; i < data.length; i++) {
+                    const row = data[i];
+                    tableHTML += `<tr><td>${row.word}</td><td>${row.score}</td></tr>`;
+                }
+
+                tableHTML += '</table>';
+                return tableHTML;
+                }
+
             $.ajax({
                     url: "http://127.0.0.1:8000/echo",
                     type: "POST",
@@ -409,22 +492,22 @@
                     success: function (data) {
                        // Handle the response from the API
                         console.log(data['predictions']);
-                        var wordsArray = [];
+                        var a = [];
                         for (var i = 0; i < data['predictions'].length; i++) {
-                            wordsArray.push(data['predictions'][i]['word']);
+                            a.push(data['predictions'][i]['word']);
                         }
-                        console.log("Predicted text:", wordsArray);
+                        wordsArray = a;
+                        console.log("Predicted text:", a);
                         var label = document.getElementById("words");
                         // label.innerHTML = '\n \n Top 5 Predictions: ' + wordsArray.join(', ');
-                        label.innerHTML = data['predictions']
-  
+                        // label.innerHTML = data['predictions']
+                        label.innerHTML = generateTableHTML(data['predictions']);  
                     },
                     error: function (error) {
                         console.error("Error:", error);
                     },
                 });
 
-                document.getElementById("updater").value = "updated";
         });
     </script>
 </body>
